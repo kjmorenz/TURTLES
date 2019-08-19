@@ -119,7 +119,7 @@ def write(filepath, filedir, fullfilename, antibunch, diffuse, pulsed, numlines,
     if timestep < k_excitation + k_emission:
         timestep = 2*(k_excitation + k_emission)
     endround = timestep
-    timestep = timestep * 100
+    #timestep = timestep * 100
     print(str(timestep) + " ps per round")
 
 
@@ -228,7 +228,7 @@ def write(filepath, filedir, fullfilename, antibunch, diffuse, pulsed, numlines,
     difffile = open(filepath +"RawData/"+ filedir+ fullfilename +"/" + "diffsof" + fullfilename+ suffix, 'w')
     starttime = rt.time()
     wrotediff = [0,0]
-    while (line < numlines or lastwritten < endtime) and line < maxlines:
+    while (line < numlines or lastwritten < endtime):# and line < maxlines:#comment out maxlines term to force to get to endtime
         if line > maxlines:
             break
         photons = []

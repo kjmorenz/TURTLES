@@ -6,8 +6,10 @@ import photon_correlation as pc
 
 import makefig2 as m
 
-import write2 as w
+import write as w
+import write2 as w2
 import writens as wns
+import writems as wms
 import analyze2 as a
 
 def isbf(file):
@@ -28,13 +30,16 @@ def simulate(filepath, filedir, fullfilename, write = 1, analyze = 1, makefig = 
              reprate = 1, wavelength = 532, laserpwr = 0.5, pulselength = 80, foclen = 310000,
              NA = 1.4, darkcounts = 1, sensitivity = 0.1, deadtime = 70000, afterpulse = 0, order = 2,
              mode = "t2", gnpwr = 20, numbins = 4096, pulsebins = 99, channels = 3,
-             picyzoom = 100, timestep = 200, ac = -1, compare = 0, dopic = 1, normalize = 0, units = 'ps'):
+             picyzoom = 100, timestep = 200, ac = -1, compare = 0, dopic = 1, normalize = 0, units = 'ps', binwidth = 10**12, foutedit = ""):
     
     if units == 'ns':
         writefn = wns.write
-    
-    else:
+    elif units == 'ms':
+        writefn = wms.write
+    elif units == 'old':
         writefn = w.write
+    else:
+        writefn = w2.write
     
     suffix = ".txt"
     if not os.path.isdir(filepath):
@@ -66,13 +71,13 @@ def simulate(filepath, filedir, fullfilename, write = 1, analyze = 1, makefig = 
 
     if analyze == 1:
         a.analyze(filepath, filedir, fullfilename, numlines, order, mode, gnpwr, 
-                    numbins, pulsebins, channels, makefig, m.makeafig, pulsed, picyzoom, reprate, deadtime, dopic, normalize)
+                    numbins, pulsebins, channels, makefig, m.makeafig, pulsed, picyzoom, reprate, deadtime, dopic, normalize, binwidth, foutedit)
 
 
     elif makefig == 1: #only really used if it crashed part way through analysis
         
         file = fullfilename
-        fileoutname = file
+        fileoutname = file + foutedit
         c = isbf(fullfilename)
         filename = "fig"
   

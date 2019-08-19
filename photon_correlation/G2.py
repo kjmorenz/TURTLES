@@ -371,7 +371,7 @@ class G2_T2(GN):
 
         return(result)
 
-    def make_figure(self, xscale=0, xzoom = [-1,-1], yzoom = [-1,-1], fontsize = 12, figsize = [-1,-1], normalize = 0, scale = 0, color = 'b', linewidth = 0.5):
+    def make_figure(self, xscale=0, xzoom = [-1,-1], yzoom = [-1,-1], fontsize = 12, figsize = [-1,-1], normalize = 0, scale = 0, color = 'b', linewidth = 0.5, normlen = 50):
         fig = plt.figure()
         matplotlib.rcParams.update({'font.size': fontsize})
         matplotlib.rc('xtick', labelsize = fontsize)
@@ -388,15 +388,24 @@ class G2_T2(GN):
 
         if not normalize == 0 or not scale == 0:
             if normalize == 1:
-                print(counts)
+                #print(counts)
                 normalize = counts[0]
                 a = 1
                 for j in range(1,int(len(counts)/5)):
                     a = a + 1
                     normalize = normalize + counts[j]
                 normalize = normalize/a
-            for i in range(len(counts)):
-                counts[i] = (counts[i]-scale)/normalize
+            if not normalize == 0:
+                if normalize == 1:
+                    normalize = 0
+                    if normlen > len(counts)/6:
+                        print("Err: normlen more than 1/6 counts")
+                        normlen = int(len(counts)/6)
+                    for i in range(normlen):
+                        normalize = normalize + counts[i]
+                    normalize = normalize/normlen
+                for i in range(len(counts)):
+                    counts[i] = (counts[i]-scale)/normalize
 
         ax.plot(times, counts, color, linewidth = linewidth)
         ax.set_ylabel("$g^{(2)}$")

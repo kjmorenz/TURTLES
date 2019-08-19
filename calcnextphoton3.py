@@ -18,7 +18,7 @@ def newpulsephoton(antibunch, k_emission, k_excitation):
         add = scipy.random.exponential(k_emission)
     else:
         add = - (k_excitation*numpy.log(1-numpy.random.rand())) #poisson
-        add = numpy.absolute(numpy.random.normal())
+        add = numpy.absolute(numpy.random.normal()) #WHY ARE THSE BOTH HERE?
     return add
 
 def quicksort(array):
@@ -65,6 +65,19 @@ def nextphoton(lastphoton, sensitivity,
                antibunch, pulsed, taurep,bfrate,
                absXsec, photonsperpulse, AvgEms, diffsIn, 
                diffsOut, ndiffsOut,countbright, bfs, probex=1):
+    '''allparams = [lastphoton, sensitivity,
+               k_emission, k_excitation, diffouttime,
+               numEms, nextOut, nextIn, endround, timestep,
+               antibunch, pulsed, taurep,bfrate,
+               absXsec, photonsperpulse, AvgEms, diffsIn, 
+               diffsOut, ndiffsOut,countbright, bfs]
+    #count = 0
+    
+    #for p in allparams:
+    #    count = count + 1
+    #    print(str(count)+ ":")
+    #    print(p)
+    #crash =plz'''
     nextphoton = []
     if pulsed == 1:
         newphoton = newpulsephoton
@@ -82,7 +95,7 @@ def nextphoton(lastphoton, sensitivity,
                 nextphoton = insert(nextphoton, bfs[i-deletions])
             del bfs[i-deletions]
             deletions = deletions +1
-
+#diffusing guys
     while nextOut < endround: #calculate emissions before it diffuses out
         diffOut = numpy.random.randint(numEms)#index identity of emitter which diffused out
         nextem = lastphoton[diffOut]
@@ -95,7 +108,8 @@ def nextphoton(lastphoton, sensitivity,
                 nextem = nextem + scipy.random.exponential(k_excitation)
                 #print(nextem)
             #randomnumber = numpy.random.rand()
-#regular emission
+            
+            #regular emission
             newem = nextem + newphoton(antibunch, k_emission, k_excitation)
             
             if numpy.random.rand() < sensitivity and newem < nextOut and newem < endround: # if we didn't miss it due to sensitivity
@@ -134,7 +148,8 @@ def nextphoton(lastphoton, sensitivity,
         if numEms == 1:
             endround = nextIn
             break #skip to next round if we just diffused out and back in
-        
+
+#nondiffusing guys        
     for i in range(numEms):
         nextem = lastphoton[i]
         bfem = 0
@@ -186,9 +201,9 @@ def darkcounts(avtime, length, lastdc, deadtime):
     while len(dc) < length:
         new = lastdc -((avtime)/2)*(numpy.log((1-numpy.random.rand())))#so that the interval is (0,1] instead of [0,1)
         #divide avtime by 2 because assuming 2 detectors
-        if not new - lastdc < deadtime:
-            dc.append(new)
-        elif numpy.random.rand() < 0.5:#if the darkcounts appeared within the deadtime of each other but on different detectors
-            dc.append(new)
+        #if not new - lastdc < deadtime:
+        dc.append(new)
+        #elif numpy.random.rand() < 0.5:#if the darkcounts appeared within the deadtime of each other but on different detectors
+            #dc.append(new)
         lastdc = new
     return dc

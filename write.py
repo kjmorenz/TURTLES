@@ -63,7 +63,7 @@ def write(filepath, filedir, fullfilename, antibunch, diffuse, pulsed, numlines,
 
     beamwaist = wavelength/(2*NA) #~200 nm
 
-    focalVol = (math.pi**(1.5))*(2.33*n/NA)*beamwaist**3 #nm^3
+    focalVol = (math.pi**(1.5))*(2.33*n/NA)*beamwaist**3 #nm^3 = 36457511.57176813
 
     AvgEms = (concentration * N_A * focalVol / (10**24)) #number not mol
     #AvgEms = 3*10**4
@@ -325,6 +325,7 @@ def write(filepath, filedir, fullfilename, antibunch, diffuse, pulsed, numlines,
     ##                        print(datapointer)
 
         elif sensitivity == 0:
+            print("ZERO SENSITIVITY")
             while len(photons) < numlines/100:
                 photons = photons + darks
                 darks = calc.darkcounts(avtime, dclen, darks[-1], deadtime)
